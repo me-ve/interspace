@@ -20,7 +20,7 @@ namespace interspace{
 		}
 		//TODO load matrix from file
 		public static ErrorCode LoadInputFile(){
-			Console.WriteLine("Type the name of matrix file: ");
+			Console.Write("Type the name of matrix file: ");
 			string filename = Console.ReadLine();
 			try{
 				ApplicationData.inputFile = new StreamReader(filename);
@@ -36,6 +36,34 @@ namespace interspace{
 			catch (Exception e){
 				ApplicationData.LogError(e);
 				return ErrorCode.UNSPECIFIED_ERROR;
+			}
+			return ErrorCode.NO_ERROR;
+		}
+		public static ErrorCode CreateMatrixFromStdin(){
+			try{
+				Console.Write("Enter the number of vertices: ");
+				int n = Convert.ToInt32(Console.ReadLine());
+				if (n <= 0) return ErrorCode.MATRIX_SIZE_ERROR; // we cannot have notpositive size matrix
+				var matrix = new int[n,n];	// make temporary matrix to save elements from input
+				for(int i=0; i<n; i++){
+					Console.Write($"Enter elements of row {i} separated by spaces: ");
+					string[] line = Console.ReadLine().Split(' ');
+					if (line.Length > n) return ErrorCode.MATRIX_FORMAT_ERROR;
+					// if the user had provided less than n numbers we assume that the rest in the row is zero
+					for(int j=0; j<line.Length; j++){
+						matrix[i,j] = Convert.ToInt32(line[j]);
+					}
+				}
+				// if there is still no error we can safely save all the data to our main matrix
+				GraphCalculations.NeighbourMatrix = matrix;
+			}
+			catch(FormatException e){	// for example if the user will input letter instead of digit
+				ApplicationData.LogError(e);
+				return ErrorCode.MATRIX_FORMAT_ERROR;
+			}
+			catch(Exception e){
+				ApplicationData.LogError(e);
+                return ErrorCode.UNSPECIFIED_ERROR;
 			}
 			return ErrorCode.NO_ERROR;
 		}

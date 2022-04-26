@@ -8,6 +8,8 @@ namespace interspace
 			string[] args = command.Where((item, index) => index != 0).ToArray();	//get other arguments
 			//TODO process those arguments too
 			switch(command[0]){
+				case "create":
+				return Commands.CreateMatrixFromStdin();
 				case "draw":
 				return Commands.DrawMatrix();
 				case "history":
@@ -37,6 +39,9 @@ namespace interspace
 					break;
 				case ErrorCode.MATRIX_NULL_ERROR:
 					Console.WriteLine("[!] The matrix is not initialized");
+					break;
+				case ErrorCode.MATRIX_SIZE_ERROR:
+					Console.WriteLine("[!] The matrix size must be positive.");
 					break;
 				case ErrorCode.MATRIX_FORMAT_ERROR:
 					Console.WriteLine("[!] The matrix in input file has wrong format");

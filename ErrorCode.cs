@@ -1,0 +1,13 @@
+using System;
+
+namespace interspace{
+	public enum ErrorCode{
+		NO_ERROR,
+		FILE_LOADING_ERROR,
+		MATRIX_NULL_ERROR,
+		MATRIX_FORMAT_ERROR,
+		MATRIX_INDEX_ERROR,
+		UNKNOWN_COMMAND_ERROR,
+		UNSPECIFIED_ERROR
+	}
+}

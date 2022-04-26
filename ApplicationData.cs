@@ -5,6 +5,7 @@ namespace interspace
 {
 	public static class ApplicationData
 	{
+		// data used by program to operate
 		public static bool running = true;										// if this is false the program will be closed
 		public static StreamReader inputFile;									// for matrix file
 		public static StreamWriter logFile = File.AppendText("logs.log");		// for logging errors

@@ -4,6 +4,7 @@ using System.Linq;
 namespace interspace
 {
 	static class UserInterface{
+		// there are stored the commands for interacting with the user
 		static ErrorCode DoAction(string[] command){
 			string[] args = command.Where((item, index) => index != 0).ToArray();	//get other arguments
 			//TODO process those arguments too

@@ -12,4 +12,5 @@ To launch the program requires the .NET Core version 5.0.
 - draw - draw the matrix
 - exit - exits program
 - history - displays all commands input by user
-- load - load the file
+- load - load the file (during creation)
+- create - create matrix through the standard input

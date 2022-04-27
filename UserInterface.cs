@@ -33,31 +33,34 @@ namespace interspace
 		}
 		public static void GetAndParseCommand(){
 			ErrorCode errorCode = DoAction(GetCommand());
-			switch(errorCode){
-				case ErrorCode.NO_ERROR:
-					ApplicationData.linesExecuted++;
-					break;
-				case ErrorCode.FILE_LOADING_ERROR:
-					Console.WriteLine("[!] File loading error");
-					break;
-				case ErrorCode.MATRIX_NULL_ERROR:
-					Console.WriteLine("[!] The matrix is not initialized");
-					break;
-				case ErrorCode.MATRIX_SIZE_ERROR:
-					Console.WriteLine("[!] The matrix size must be positive.");
-					break;
-				case ErrorCode.MATRIX_FORMAT_ERROR:
-					Console.WriteLine("[!] The matrix in input file has wrong format");
-					break;
-				case ErrorCode.MATRIX_INDEX_ERROR:
-					Console.WriteLine("[!] The index was outside of the bounds of matrix");
-					break;
-				case ErrorCode.UNKNOWN_COMMAND_ERROR:
-					Console.WriteLine("[!] Unknown command");
-					break;
-				default:
-					Console.WriteLine("[!] Unknown error");
-					break;
+			if(errorCode != ErrorCode.NO_ERROR){
+				Console.ForegroundColor = ConsoleColor.Red;
+				switch(errorCode){
+					case ErrorCode.FILE_LOADING_ERROR:
+						Console.WriteLine("[!] File loading error");
+						break;
+					case ErrorCode.MATRIX_NULL_ERROR:
+						Console.WriteLine("[!] The matrix is not initialized");
+						break;
+					case ErrorCode.MATRIX_SIZE_ERROR:
+						Console.WriteLine("[!] The matrix size must be positive.");
+						break;
+					case ErrorCode.MATRIX_FORMAT_ERROR:
+						Console.WriteLine("[!] The matrix in input file has wrong format");
+						break;
+					case ErrorCode.MATRIX_INDEX_ERROR:
+						Console.WriteLine("[!] The index was outside of the bounds of matrix");
+						break;
+					case ErrorCode.UNKNOWN_COMMAND_ERROR:
+						Console.WriteLine("[!] Unknown command");
+						break;
+					default:
+						Console.WriteLine("[!] Unknown error");
+						break;
+				}
+				Console.ResetColor();
+			}else{
+				ApplicationData.linesExecuted++;
 			}
 		}
 	}

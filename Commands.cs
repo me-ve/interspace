@@ -18,7 +18,6 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-		//TODO load matrix from file
 		public static ErrorCode LoadMatrixFromFile(){
 			Console.Write("Type the name of matrix file: ");
 			string filename = Console.ReadLine();

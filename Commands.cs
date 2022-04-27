@@ -92,5 +92,10 @@ namespace interspace{
             }
             return ErrorCode.NO_ERROR;
         }
+		public static ErrorCode Help(){
+			Console.WriteLine("Commands:");
+			Console.WriteLine("create\tdraw\texit\thistory\tload\thelp");
+			return ErrorCode.NO_ERROR;
+		}
     }
 }

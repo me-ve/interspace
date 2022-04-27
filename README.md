@@ -9,8 +9,10 @@ The console-based, crossplatform program for calculating shortest paths for user
 To launch the program requires the .NET Core version 5.0.
 
 ## Commands
-- draw - draw the matrix
+- create - creates matrix through the standard input
+- draw - draws the matrix
 - exit - exits program
 - history - displays all commands input by user
-- load - load the file (during creation)
-- create - create matrix through the standard input
+- load - loads the file (during creation)
+- shortestpath - returns path with shortest length for specified two vertices (planned)
+- help - displays help dialog with text above

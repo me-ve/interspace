@@ -13,6 +13,8 @@ namespace interspace
 				return Commands.CreateMatrixFromStdin();
 				case "draw":
 				return Commands.DrawMatrix();
+				case "help":
+				return Commands.Help();
 				case "history":
 				return Commands.DisplayHistory();
 				case "load":

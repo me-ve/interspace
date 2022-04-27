@@ -18,7 +18,7 @@ namespace interspace
 				case "history":
 				return Commands.DisplayHistory();
 				case "load":
-				return Commands.LoadInputFile();
+				return Commands.LoadMatrixFromFile();
 				case "exit":
 				return Commands.CloseProgram();
 			}

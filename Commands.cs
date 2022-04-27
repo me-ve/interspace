@@ -19,11 +19,26 @@ namespace interspace{
 			return ErrorCode.NO_ERROR;
 		}
 		//TODO load matrix from file
-		public static ErrorCode LoadInputFile(){
+		public static ErrorCode LoadMatrixFromFile(){
 			Console.Write("Type the name of matrix file: ");
 			string filename = Console.ReadLine();
 			try{
 				ApplicationData.inputFile = new StreamReader(filename);
+				//process file
+				int n = Convert.ToInt32(ApplicationData.inputFile.ReadLine());	//get vertices' count
+				if (n <= 0) return ErrorCode.MATRIX_SIZE_ERROR;
+				var matrix = new int[n,n];
+				for(int i=0; i<n; i++){
+					string[] line = ApplicationData.inputFile.ReadLine().Split(' ');
+					if(line.Length > n) return ErrorCode.MATRIX_FORMAT_ERROR;
+					// if the user had provided less than n numbers we assume the rest are zeros
+					for(int j=0; j<line.Length; j++){
+						matrix[i,j] = Convert.ToInt32(line[j]);
+					}
+				}
+				GraphCalculations.NeighbourMatrix = matrix;
+				//close the file after processing
+				ApplicationData.inputFile.Close();
 			}
 			catch (FileNotFoundException e){
 				ApplicationData.LogError(e);
@@ -67,6 +82,7 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
+
 		public static ErrorCode DrawMatrix(){
             try{
                 string matrixStr = "";
@@ -92,6 +108,7 @@ namespace interspace{
             }
             return ErrorCode.NO_ERROR;
         }
+		
 		public static ErrorCode Help(){
 			Console.WriteLine("Commands:");
 			Console.WriteLine("create\tdraw\texit\thistory\tload\thelp");

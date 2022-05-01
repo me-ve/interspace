@@ -4,6 +4,7 @@ namespace interspace{
 	public enum ErrorCode{
 		// this class contains codes of various events that could ruin user interaction with program
 		NO_ERROR,
+		FILE_GENERAL_ERROR,
 		FILE_LOADING_ERROR,
 		MATRIX_NULL_ERROR,
 		MATRIX_SIZE_ERROR,

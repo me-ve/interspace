@@ -43,6 +43,10 @@ namespace interspace{
 				ApplicationData.LogError(e);
 				return ErrorCode.FILE_LOADING_ERROR;
 			}
+			catch (IOException e){
+				ApplicationData.LogError(e);
+				return ErrorCode.FILE_GENERAL_ERROR;
+			}
 			catch (FormatException e){
 				ApplicationData.LogError(e);
 				return ErrorCode.MATRIX_FORMAT_ERROR;

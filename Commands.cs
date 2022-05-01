@@ -1,9 +1,20 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
+using ErrorCode = interspace.Errors.ErrorCode;
 
 namespace interspace{
     public static class Commands{
 		// all the commands are specified here
+		public delegate Errors.ErrorCode CommandDelegate();
+		public static Dictionary<string, CommandDelegate> commands = new Dictionary<string, CommandDelegate>(){
+			{"create",	CreateMatrixFromStdin},
+			{"draw",	DrawMatrix},
+			{"help",	Help},
+			{"history",	DisplayHistory},
+			{"load",	LoadMatrixFromFile},
+			{"exit",	CloseProgram}
+		};
         public static ErrorCode CloseProgram(){
 			ApplicationData.running = false;
 			return ErrorCode.NO_ERROR;

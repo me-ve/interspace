@@ -11,10 +11,13 @@ To launch the program requires the .NET Core version 5.0.
 ## Commands
 - create - creates matrix through the standard input
 - draw - draws the matrix
+- editcol - edit first values in matrix column
+- editedge - edit specified edge length
+- editrow - edit first values in matrix row
 - exit - exits program
 - history - displays all commands input by user
 - load - loads matrix from the file
-- shortestpath - returns path with shortest length for specified two vertices (planned)
+- shortestpath - returns path with shortest length for specified two vertices (not implemented yet)
 - help - displays commands
 
 ## Format of matrix in the file
@@ -28,7 +31,7 @@ x x ... x
 ```
 where
 ```
-size - 32-bit integer that stores information about how many vertices are present
-x - information about direct route length between vertices
+size - 32-bit unsigned integer that stores information about how many vertices are present
+x - 32-bit signed integer edge length between vertices
 ```
 The user can skip zeros in the right part of matrix during inputting.

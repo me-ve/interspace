@@ -8,15 +8,16 @@ namespace interspace{
 		// all the commands are specified here
 		public delegate Errors.ErrorCode CommandDelegate();
 		public static Dictionary<string, CommandDelegate> commands = new Dictionary<string, CommandDelegate>(){
-			{"create",		CreateMatrixFromStdin},
-			{"draw",		DrawMatrix},
-			{"editcol",		EditMatrixCol},
-			{"editedge",	EditMatrixEdge},
-			{"editrow",		EditMatrixRow},
-			{"help",		Help},
-			{"history",		DisplayHistory},
-			{"load",		LoadMatrixFromFile},
-			{"exit",		CloseProgram}
+			{"create",			CreateMatrixFromStdin},
+			{"draw",			DrawMatrix},
+			{"editcol",			EditMatrixCol},
+			{"editedge",		EditMatrixEdge},
+			{"editrow",			EditMatrixRow},
+			{"help",			Help},
+			{"history",			DisplayHistory},
+			{"load",			LoadMatrixFromFile},
+			{"shortestpaths",	GetShortestPath},
+			{"exit",			CloseProgram},
 		};
 		public static int commandsCount = commands.Count;
 		public static List<string> commandsNamesList = new List<string>(commands.Keys);
@@ -218,7 +219,26 @@ namespace interspace{
 			}
             return ErrorCode.NO_ERROR;
         }
-		
+		public static ErrorCode GetShortestPath(){
+			try{
+				GraphCalculations.CalculateShortestPaths();	//TODO optimize to not calculate it if the changes to matrix were not done
+				for(int i=0; i<GraphCalculations.Vertices; i++){
+					for(int j=0; j<GraphCalculations.Vertices; j++){
+						Console.Write($"{GraphCalculations.ShortestPathsMatrix[i,j]}\t");
+					}
+					Console.WriteLine();
+				}
+			}
+			catch(Exception ex){
+				switch(ex){
+					case NullReferenceException:
+						return ErrorCode.MATRIX_NULL_ERROR;
+					default:
+						return ErrorCode.UNSPECIFIED_ERROR;
+				}
+			}
+			return ErrorCode.NO_ERROR;
+		}
 		public static ErrorCode Help(){
 			Console.WriteLine("Commands:");
 			string str = "Commands:\n";

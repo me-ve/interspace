@@ -9,14 +9,14 @@ namespace interspace{
 		public delegate Errors.ErrorCode CommandDelegate();
 		public static Dictionary<string, CommandDelegate> commands = new Dictionary<string, CommandDelegate>(){
 			{"create",			CreateMatrixFromStdin},
-			{"draw",			DrawMatrix},
+			{"draw",			DrawNeighbourMatrix},
 			{"editcol",			EditMatrixCol},
 			{"editedge",		EditMatrixEdge},
 			{"editrow",			EditMatrixRow},
 			{"help",			Help},
 			{"history",			DisplayHistory},
 			{"load",			LoadMatrixFromFile},
-			{"shortestpaths",	GetShortestPath},
+			{"shortestpaths",	DrawShortestPathsMatrix},
 			{"exit",			CloseProgram},
 		};
 		public static int commandsCount = commands.Count;
@@ -107,11 +107,13 @@ namespace interspace{
 				int[] temp = new int[GraphCalculations.Vertices];
 				Console.WriteLine("Enter new values: ");
 				string[] line = Console.ReadLine().Split(' ');
-				if(line.Length > GraphCalculations.Vertices) throw new FormatException();
-				for(int i=0; i<line.Length; i++){
+				int n = line.Length;
+				if(n > GraphCalculations.Vertices) throw new FormatException();
+				//attention - this changes only n first elements
+				for(int i=0; i<n; i++){
 					temp[i] = Convert.ToInt32(line[i]);
 				}
-				for(int i=0; i<line.Length; i++){
+				for(int i=0; i<n; i++){
 					GraphCalculations.NeighbourMatrix[i, col] = temp[i];
 				}
 			}
@@ -166,11 +168,13 @@ namespace interspace{
 				int[] temp = new int[GraphCalculations.Vertices];
 				Console.WriteLine("Enter new values: ");
 				string[] line = Console.ReadLine().Split(' ');
-				if(line.Length > GraphCalculations.Vertices) throw new FormatException();
-				for(int j=0; j<line.Length; j++){
+				int n = line.Length;
+				if(n > GraphCalculations.Vertices) throw new FormatException();
+				//attention - this changes only n first elements
+				for(int j=0; j<n; j++){
 					temp[j] = Convert.ToInt32(line[j]);
 				}
-				for(int j=0; j<line.Length; j++){
+				for(int j=0; j<n; j++){
 					GraphCalculations.NeighbourMatrix[row, j] = temp[j];
 				}
 			}
@@ -189,22 +193,9 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-		public static ErrorCode DrawMatrix(){
+		public static ErrorCode DrawNeighbourMatrix(){
             try{
-                string colsStr = "";
-				uint n = GraphCalculations.Vertices;
-				for(uint i=0; i<n; i++){
-					colsStr += $"\t{i}";
-				}
-				UserInterface.WriteColorLine(colsStr, UserInterface.IndexColor);
-                for(uint i=0; i<n; i++){
-					UserInterface.WriteColor($"{i}", UserInterface.IndexColor);
-					string rowStr = "";
-                    for(uint j=0; j<n; j++){
-                        rowStr += $"\t{GraphCalculations.Edge(i, j)}";
-                    }
-					Console.WriteLine(rowStr);
-                }
+                UserInterface.DrawMatrix(GraphCalculations.NeighbourMatrix);
             }
 			catch(Exception ex){
 				ApplicationData.LogError(ex);
@@ -219,20 +210,18 @@ namespace interspace{
 			}
             return ErrorCode.NO_ERROR;
         }
-		public static ErrorCode GetShortestPath(){
+		public static ErrorCode DrawShortestPathsMatrix(){
 			try{
-				GraphCalculations.CalculateShortestPaths();	//TODO optimize to not calculate it if the changes to matrix were not done
-				for(int i=0; i<GraphCalculations.Vertices; i++){
-					for(int j=0; j<GraphCalculations.Vertices; j++){
-						Console.Write($"{GraphCalculations.ShortestPathsMatrix[i,j]}\t");
-					}
-					Console.WriteLine();
-				}
+				//TODO if the matrix is not changed it shouldn't be calculated again
+				GraphCalculations.CalculateShortestPaths();
+				UserInterface.DrawMatrix(GraphCalculations.ShortestPathsMatrix);
 			}
 			catch(Exception ex){
 				switch(ex){
 					case NullReferenceException:
 						return ErrorCode.MATRIX_NULL_ERROR;
+					case IndexOutOfRangeException:
+						return ErrorCode.MATRIX_INDEX_ERROR;
 					default:
 						return ErrorCode.UNSPECIFIED_ERROR;
 				}

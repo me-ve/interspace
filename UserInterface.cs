@@ -35,6 +35,20 @@ namespace interspace
 			Console.Write(message);
 			Console.ResetColor();
 		}
+		public static void DrawMatrix(int[,] matrix){
+			string colsStr = "";
+			int m = matrix.GetLength(0);
+			int n = matrix.GetLength(1);
+			for(int i=0; i<n; i++){
+				colsStr += $"\t{i}";
+			}
+			WriteColorLine(colsStr, IndexColor);
+			string[] rows = matrix.RowsToString();
+			   for(uint i=0; i<n; i++){
+				WriteColor($"{i}\t", IndexColor);
+				Console.WriteLine(rows[i]);
+			}
+		}
 		public static void OutputErrorToUser(ErrorCode errorCode){
 			//assume we won't output anything if there is no error
 			if(errorCode == ErrorCode.NO_ERROR) return;

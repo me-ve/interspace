@@ -5,6 +5,18 @@ namespace interspace
 		// the class for storing functions operating on graphs
 		public static int[,] NeighbourMatrix;
 		public static int[,] ShortestPathsMatrix;
+		public static string[] RowsToString(this int[,] matrix){
+			int m = matrix.GetLength(0);
+			int n = matrix.GetLength(1);
+			string[] rows = new string[m];
+			for(int i=0; i<m; i++){
+				rows[i] = "";
+				for(int j=0; j<n; j++){
+					rows[i] += $"{matrix[i,j]}\t";
+				}
+			}
+			return rows;
+		}
 		public static uint Vertices => (uint)NeighbourMatrix.GetLength(0);
 		public static bool hasNegativeEdges(){
 			for(uint i=0; i<Vertices; i++){
@@ -17,7 +29,6 @@ namespace interspace
 		public static int Edge(uint vertex1, uint vertex2){
 			return NeighbourMatrix[vertex1, vertex2];
 		}
-		// TODO implement those functions to the console
 		public static int[,] ExtendShortestPaths(int[,] D, int[,] W){
 			int n = D.GetLength(0);
 			var dPrim = new int[n,n];

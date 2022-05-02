@@ -16,7 +16,7 @@ namespace interspace{
 		}
 		public static Dictionary<ErrorCode, string> errorCommunicates = new Dictionary<ErrorCode, string>(){
 			//sent to console during error
-			{ErrorCode.NO_ERROR, ""},
+			{ErrorCode.NO_ERROR, "OK"},
 			{ErrorCode.FILE_GENERAL_ERROR,		"There was a problem with loading file"},
 			{ErrorCode.FILE_LOADING_ERROR,		"The file does not exist"},
 			{ErrorCode.MATRIX_NULL_ERROR,		"The matrix is not initialized"},

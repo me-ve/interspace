@@ -28,8 +28,8 @@ namespace interspace{
 			try{
 				Console.WriteLine(ApplicationData.history);
 			}
-			catch (Exception e){
-				ApplicationData.LogError(e);
+			catch (Exception ex){
+				ApplicationData.LogError(ex);
 				return ErrorCode.UNSPECIFIED_ERROR;
 			}
 			return ErrorCode.NO_ERROR;
@@ -55,21 +55,18 @@ namespace interspace{
 				//close the file after processing
 				ApplicationData.inputFile.Close();
 			}
-			catch (FileNotFoundException e){
-				ApplicationData.LogError(e);
-				return ErrorCode.FILE_LOADING_ERROR;
-			}
-			catch (IOException e){
-				ApplicationData.LogError(e);
-				return ErrorCode.FILE_GENERAL_ERROR;
-			}
-			catch (FormatException e){
-				ApplicationData.LogError(e);
-				return ErrorCode.MATRIX_FORMAT_ERROR;
-			}
-			catch (Exception e){
-				ApplicationData.LogError(e);
-				return ErrorCode.UNSPECIFIED_ERROR;
+			catch (Exception ex){
+				ApplicationData.LogError(ex);
+				switch(ex){
+					case FileNotFoundException:
+						return ErrorCode.FILE_LOADING_ERROR;
+					case IOException:
+						return ErrorCode.FILE_GENERAL_ERROR;
+					case FormatException:
+						return ErrorCode.MATRIX_FORMAT_ERROR;
+					default:
+						return ErrorCode.UNSPECIFIED_ERROR;
+				}
 			}
 			return ErrorCode.NO_ERROR;
 		}
@@ -90,13 +87,14 @@ namespace interspace{
 				// if there is still no error we can safely save all the data to our main matrix
 				GraphCalculations.NeighbourMatrix = matrix;
 			}
-			catch(FormatException e){	// for example if the user will input letter instead of digit
-				ApplicationData.LogError(e);
-				return ErrorCode.MATRIX_FORMAT_ERROR;
-			}
-			catch(Exception e){
-				ApplicationData.LogError(e);
-                return ErrorCode.UNSPECIFIED_ERROR;
+			catch(Exception ex){
+				ApplicationData.LogError(ex);
+				switch(ex){
+					case FormatException:
+						return ErrorCode.MATRIX_FORMAT_ERROR;
+					default:
+						return ErrorCode.NO_ERROR;
+				}
 			}
 			return ErrorCode.NO_ERROR;
 		}
@@ -117,21 +115,18 @@ namespace interspace{
 					GraphCalculations.NeighbourMatrix[i, col] = temp[i];
 				}
 			}
-			catch(NullReferenceException e){
-                ApplicationData.LogError(e);
-                return ErrorCode.MATRIX_NULL_ERROR;
-            }
-			catch(IndexOutOfRangeException e){
-				ApplicationData.LogError(e);
-				return ErrorCode.MATRIX_INDEX_ERROR;
-			}
-			catch(FormatException e){
-				ApplicationData.LogError(e);
-				return ErrorCode.MATRIX_FORMAT_ERROR;
-			}
-			catch(Exception e){
-				ApplicationData.LogError(e);
-				return ErrorCode.UNSPECIFIED_ERROR;
+			catch(Exception ex){
+				ApplicationData.LogError(ex);
+				switch(ex){
+					case NullReferenceException:
+						return ErrorCode.MATRIX_NULL_ERROR;
+					case IndexOutOfRangeException:
+						return ErrorCode.MATRIX_INDEX_ERROR;
+					case FormatException:
+						return ErrorCode.MATRIX_FORMAT_ERROR;
+					default:
+						return ErrorCode.UNSPECIFIED_ERROR;
+				}
 			}
 			return ErrorCode.NO_ERROR;
 		}
@@ -147,21 +142,18 @@ namespace interspace{
 				Console.WriteLine("Enter new value: ");
 				GraphCalculations.NeighbourMatrix[row, col] = Convert.ToInt32(Console.ReadLine());
 			}
-			catch(NullReferenceException e){
-                ApplicationData.LogError(e);
-                return ErrorCode.MATRIX_NULL_ERROR;
-            }
-			catch(IndexOutOfRangeException e){
-				ApplicationData.LogError(e);
-				return ErrorCode.MATRIX_INDEX_ERROR;
-			}
-			catch(FormatException e){
-				ApplicationData.LogError(e);
-				return ErrorCode.MATRIX_FORMAT_ERROR;
-			}
-			catch(Exception e){
-				ApplicationData.LogError(e);
-				return ErrorCode.UNSPECIFIED_ERROR;
+			catch(Exception ex){
+				ApplicationData.LogError(ex);
+				switch(ex){
+					case NullReferenceException:
+						return ErrorCode.MATRIX_NULL_ERROR;
+					case IndexOutOfRangeException:
+						return ErrorCode.MATRIX_INDEX_ERROR;
+					case FormatException:
+						return ErrorCode.MATRIX_FORMAT_ERROR;
+					default:
+						return ErrorCode.UNSPECIFIED_ERROR;
+				}
 			}
 			return ErrorCode.NO_ERROR;
 		}
@@ -182,21 +174,18 @@ namespace interspace{
 					GraphCalculations.NeighbourMatrix[row, j] = temp[j];
 				}
 			}
-			catch(NullReferenceException e){
-                ApplicationData.LogError(e);
-                return ErrorCode.MATRIX_NULL_ERROR;
-            }
-			catch(IndexOutOfRangeException e){
-				ApplicationData.LogError(e);
-				return ErrorCode.MATRIX_INDEX_ERROR;
-			}
-			catch(FormatException e){
-				ApplicationData.LogError(e);
-				return ErrorCode.MATRIX_FORMAT_ERROR;
-			}
-			catch(Exception e){
-				ApplicationData.LogError(e);
-				return ErrorCode.UNSPECIFIED_ERROR;
+			catch(Exception ex){
+				ApplicationData.LogError(ex);
+				switch(ex){
+					case NullReferenceException:
+						return ErrorCode.MATRIX_NULL_ERROR;
+					case IndexOutOfRangeException:
+						return ErrorCode.MATRIX_INDEX_ERROR;
+					case FormatException:
+						return ErrorCode.MATRIX_FORMAT_ERROR;
+					default:
+						return ErrorCode.UNSPECIFIED_ERROR;
+				}
 			}
 			return ErrorCode.NO_ERROR;
 		}
@@ -211,18 +200,17 @@ namespace interspace{
                 }
                 Console.WriteLine(matrixStr);
             }
-			catch(IndexOutOfRangeException e){
-				ApplicationData.LogError(e);
-                return ErrorCode.MATRIX_INDEX_ERROR;
+			catch(Exception ex){
+				ApplicationData.LogError(ex);
+				switch(ex){
+					case NullReferenceException:
+						return ErrorCode.MATRIX_NULL_ERROR;
+					case IndexOutOfRangeException:
+						return ErrorCode.MATRIX_INDEX_ERROR;
+					default:
+						return ErrorCode.UNSPECIFIED_ERROR;
+				}
 			}
-            catch(NullReferenceException e){
-                ApplicationData.LogError(e);
-                return ErrorCode.MATRIX_NULL_ERROR;
-            }
-            catch (Exception e){
-				ApplicationData.LogError(e);
-                return ErrorCode.UNSPECIFIED_ERROR;
-            }
             return ErrorCode.NO_ERROR;
         }
 		

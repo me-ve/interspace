@@ -27,6 +27,11 @@ namespace interspace
 			Console.WriteLine(message);
 			Console.ResetColor();
 		}
+		public static void WriteColor(string message, ConsoleColor color){
+			Console.ForegroundColor = color;
+			Console.Write(message);
+			Console.ResetColor();
+		}
 		public static void OutputErrorToUser(ErrorCode errorCode){
 			//assume we won't output anything if there is no error
 			if(errorCode == ErrorCode.NO_ERROR) return;

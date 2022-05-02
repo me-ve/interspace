@@ -5,7 +5,10 @@ using CommandDelegate = interspace.Commands.CommandDelegate;
 namespace interspace
 {
 	static class UserInterface{
-		// there are stored the commands for interacting with the user	
+		// there are stored the commands for interacting with the user
+		public static ConsoleColor ErrorColor => ConsoleColor.Red;
+		public static ConsoleColor SuccessColor => ConsoleColor.Green;
+		public static ConsoleColor IndexColor => ConsoleColor.Cyan;
 		static ErrorCode DoAction(string[] commandParams){
 			string[] args = commandParams.Where((item, index) => index != 0).ToArray();	//get other arguments
 			//TODO process those arguments too
@@ -39,13 +42,25 @@ namespace interspace
 			if(!Errors.errorCommunicates.TryGetValue(errorCode, out communicate)){
 				communicate = "Unknown error";
 			}
-			WriteColorLine($"[!] {communicate}", ConsoleColor.Red);
+			WriteColorLine($"[!] {communicate}", ErrorColor);
 		}
 		public static void GetAndParseCommand(){
-			ErrorCode errorCode = DoAction(GetCommand());
+			string[] command = GetCommand();
+			ErrorCode errorCode = DoAction(command);
 			if(errorCode != ErrorCode.NO_ERROR)
 				OutputErrorToUser(errorCode);
-			else ApplicationData.linesExecuted++;
+			else{
+				switch(command[0]){
+					case "history":
+					case "help":
+					case "exit":
+						break;
+					default:
+						WriteColorLine("OK", SuccessColor);
+					break;
+				}
+				ApplicationData.linesExecuted++;
+			}
 		}
 	}
 }

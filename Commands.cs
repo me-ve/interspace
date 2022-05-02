@@ -190,15 +190,14 @@ namespace interspace{
 		}
 		public static ErrorCode DrawMatrix(){
             try{
-				ConsoleColor indexColor = ConsoleColor.Cyan;
                 string colsStr = "";
 				uint n = GraphCalculations.Vertices;
 				for(uint i=0; i<n; i++){
 					colsStr += $"\t{i}";
 				}
-				UserInterface.WriteColorLine(colsStr, indexColor);
+				UserInterface.WriteColorLine(colsStr, UserInterface.IndexColor);
                 for(uint i=0; i<n; i++){
-					UserInterface.WriteColor($"{i}", indexColor);
+					UserInterface.WriteColor($"{i}", UserInterface.IndexColor);
 					string rowStr = "";
                     for(uint j=0; j<n; j++){
                         rowStr += $"\t{GraphCalculations.Edge(i, j)}";

@@ -10,15 +10,16 @@ namespace interspace{
 		public static Dictionary<string, CommandDelegate> commands = new Dictionary<string, CommandDelegate>(){
 			{"create",			CreateMatrixFromStdin},
 			{"draw",			DrawNeighbourMatrix},
+			{"edit",			EditMatrixEdge},
 			{"editcol",			EditMatrixCol},
-			{"editedge",		EditMatrixEdge},
 			{"editrow",			EditMatrixRow},
 			{"help",			Help},
 			{"history",			DisplayHistory},
 			{"load",			LoadMatrixFromFile},
-			{"shortestpaths",	DrawShortestPathsMatrix},
+			{"shortest",		DrawShortestPathsMatrix},
 			{"exit",			CloseProgram},
 		};
+
 		public static int commandsCount = commands.Count;
 		public static List<string> commandsNamesList = new List<string>(commands.Keys);
         public static ErrorCode CloseProgram(){
@@ -41,7 +42,7 @@ namespace interspace{
 			try{
 				ApplicationData.inputFile = new StreamReader(filename);
 				//process file
-				uint n = Convert.ToUInt32(ApplicationData.inputFile.ReadLine());	//get vertices' count
+				uint n = Convert.ToUInt32(ApplicationData.inputFile.ReadLine()); //get vertices' count
 				var matrix = new int[n,n];
 				for(int i=0; i<n; i++){
 					string[] line = ApplicationData.inputFile.ReadLine().Split(' ');
@@ -217,6 +218,7 @@ namespace interspace{
 				UserInterface.DrawMatrix(GraphCalculations.ShortestPathsMatrix);
 			}
 			catch(Exception ex){
+				ApplicationData.LogError(ex);
 				switch(ex){
 					case NullReferenceException:
 						return ErrorCode.MATRIX_NULL_ERROR;
@@ -229,13 +231,14 @@ namespace interspace{
 			return ErrorCode.NO_ERROR;
 		}
 		public static ErrorCode Help(){
-			Console.WriteLine("Commands:");
-			string str = "Commands:\n";
-			for(int i=0; i<commandsCount; i++){
-				str += $"{commandsNamesList[i]}";
-				if(i<commandsCount-1) str += "\t";
+			try{
+				Console.WriteLine(UserInterface.HelpDialog);
 			}
-			Console.WriteLine(str);
+			catch(Exception ex){
+				//TODO secure for case when help.txt file is not present
+				ApplicationData.LogError(ex);
+				return ErrorCode.UNSPECIFIED_ERROR;
+			}
 			return ErrorCode.NO_ERROR;
 		}
     }

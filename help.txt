@@ -1,0 +1,10 @@
+create   creates the neighbour matrix through the standard input
+draw     draws the neighbour matrix
+edit     edits specified edge length
+editcol  edits first values in neighbour matrix column
+editrow  edits first values in neighbour matrix row
+help     displays available commands
+history  displays all commands input by user
+load     loads the neighbour matrix from the text file
+shortest returns matrix of shortest paths for every pair of vertices
+exit     closes the program

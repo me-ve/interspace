@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using ErrorCode = interspace.Errors.ErrorCode;
 using CommandDelegate = interspace.Commands.CommandDelegate;
@@ -9,6 +10,7 @@ namespace interspace
 		public static ConsoleColor ErrorColor => ConsoleColor.Red;
 		public static ConsoleColor SuccessColor => ConsoleColor.Green;
 		public static ConsoleColor IndexColor => ConsoleColor.Cyan;
+		public static string HelpDialog = File.ReadAllText("help.txt");
 		static ErrorCode DoAction(string[] commandParams){
 			string[] args = commandParams.Where((item, index) => index != 0).ToArray();	//get other arguments
 			//TODO process those arguments too

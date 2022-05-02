@@ -4,7 +4,8 @@ namespace interspace
 	{
 		// the class for storing functions operating on graphs
 		public static int[,] NeighbourMatrix;
-		public static int DirectPathDistance(int vertex1, int vertex2){
+		public static uint Vertices => (uint)NeighbourMatrix.GetLength(0);
+		public static int Edge(uint vertex1, uint vertex2){
 			return NeighbourMatrix[vertex1, vertex2];
 		}
 		// TODO implement those functions to the console

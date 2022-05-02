@@ -8,13 +8,18 @@ namespace interspace{
 		// all the commands are specified here
 		public delegate Errors.ErrorCode CommandDelegate();
 		public static Dictionary<string, CommandDelegate> commands = new Dictionary<string, CommandDelegate>(){
-			{"create",	CreateMatrixFromStdin},
-			{"draw",	DrawMatrix},
-			{"help",	Help},
-			{"history",	DisplayHistory},
-			{"load",	LoadMatrixFromFile},
-			{"exit",	CloseProgram}
+			{"create",		CreateMatrixFromStdin},
+			{"draw",		DrawMatrix},
+			{"editcol",		EditMatrixCol},
+			{"editedge",	EditMatrixEdge},
+			{"editrow",		EditMatrixRow},
+			{"help",		Help},
+			{"history",		DisplayHistory},
+			{"load",		LoadMatrixFromFile},
+			{"exit",		CloseProgram}
 		};
+		public static int commandsCount = commands.Count;
+		public static List<string> commandsNamesList = new List<string>(commands.Keys);
         public static ErrorCode CloseProgram(){
 			ApplicationData.running = false;
 			return ErrorCode.NO_ERROR;
@@ -71,13 +76,12 @@ namespace interspace{
 		public static ErrorCode CreateMatrixFromStdin(){
 			try{
 				Console.Write("Enter the number of vertices: ");
-				int n = Convert.ToInt32(Console.ReadLine());
-				if (n <= 0) return ErrorCode.MATRIX_SIZE_ERROR; // we cannot have notpositive size matrix
+				uint n = Convert.ToUInt32(Console.ReadLine());
 				var matrix = new int[n,n];	// make temporary matrix to save elements from input
 				for(int i=0; i<n; i++){
 					Console.Write($"Enter elements of row {i} separated by spaces: ");
 					string[] line = Console.ReadLine().Split(' ');
-					if (line.Length > n) return ErrorCode.MATRIX_FORMAT_ERROR;
+					if (line.Length > n) throw new FormatException();
 					// if the user had provided less than n numbers we assume that the rest in the row is zero
 					for(int j=0; j<line.Length; j++){
 						matrix[i,j] = Convert.ToInt32(line[j]);
@@ -96,13 +100,112 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-
+		public static ErrorCode EditMatrixCol(){
+			try{
+				if(GraphCalculations.NeighbourMatrix == null) throw new NullReferenceException();
+				Console.WriteLine("Enter edited column: ");
+				uint col = Convert.ToUInt32(Console.ReadLine());
+				if(col>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
+				int[] temp = new int[GraphCalculations.Vertices];
+				Console.WriteLine("Enter new values: ");
+				string[] line = Console.ReadLine().Split(' ');
+				if(line.Length > GraphCalculations.Vertices) throw new FormatException();
+				for(int i=0; i<line.Length; i++){
+					temp[i] = Convert.ToInt32(line[i]);
+				}
+				for(int i=0; i<line.Length; i++){
+					GraphCalculations.NeighbourMatrix[i, col] = temp[i];
+				}
+			}
+			catch(NullReferenceException e){
+                ApplicationData.LogError(e);
+                return ErrorCode.MATRIX_NULL_ERROR;
+            }
+			catch(IndexOutOfRangeException e){
+				ApplicationData.LogError(e);
+				return ErrorCode.MATRIX_INDEX_ERROR;
+			}
+			catch(FormatException e){
+				ApplicationData.LogError(e);
+				return ErrorCode.MATRIX_FORMAT_ERROR;
+			}
+			catch(Exception e){
+				ApplicationData.LogError(e);
+				return ErrorCode.UNSPECIFIED_ERROR;
+			}
+			return ErrorCode.NO_ERROR;
+		}
+		public static ErrorCode EditMatrixEdge(){
+			try{
+				if(GraphCalculations.NeighbourMatrix == null) throw new NullReferenceException();
+				Console.WriteLine("Enter edited row: ");
+				uint row = Convert.ToUInt32(Console.ReadLine());
+				if(row>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
+				uint col = Convert.ToUInt32(Console.ReadLine());
+				Console.WriteLine("Enter edited column: ");
+				if(row>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
+				Console.WriteLine("Enter new value: ");
+				GraphCalculations.NeighbourMatrix[row, col] = Convert.ToInt32(Console.ReadLine());
+			}
+			catch(NullReferenceException e){
+                ApplicationData.LogError(e);
+                return ErrorCode.MATRIX_NULL_ERROR;
+            }
+			catch(IndexOutOfRangeException e){
+				ApplicationData.LogError(e);
+				return ErrorCode.MATRIX_INDEX_ERROR;
+			}
+			catch(FormatException e){
+				ApplicationData.LogError(e);
+				return ErrorCode.MATRIX_FORMAT_ERROR;
+			}
+			catch(Exception e){
+				ApplicationData.LogError(e);
+				return ErrorCode.UNSPECIFIED_ERROR;
+			}
+			return ErrorCode.NO_ERROR;
+		}
+		public static ErrorCode EditMatrixRow(){
+			try{
+				if(GraphCalculations.NeighbourMatrix == null) throw new NullReferenceException();
+				Console.WriteLine("Enter edited row: ");
+				uint row = Convert.ToUInt32(Console.ReadLine());
+				if(row>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
+				int[] temp = new int[GraphCalculations.Vertices];
+				Console.WriteLine("Enter new values: ");
+				string[] line = Console.ReadLine().Split(' ');
+				if(line.Length > GraphCalculations.Vertices) throw new FormatException();
+				for(int j=0; j<line.Length; j++){
+					temp[j] = Convert.ToInt32(line[j]);
+				}
+				for(int j=0; j<line.Length; j++){
+					GraphCalculations.NeighbourMatrix[row, j] = temp[j];
+				}
+			}
+			catch(NullReferenceException e){
+                ApplicationData.LogError(e);
+                return ErrorCode.MATRIX_NULL_ERROR;
+            }
+			catch(IndexOutOfRangeException e){
+				ApplicationData.LogError(e);
+				return ErrorCode.MATRIX_INDEX_ERROR;
+			}
+			catch(FormatException e){
+				ApplicationData.LogError(e);
+				return ErrorCode.MATRIX_FORMAT_ERROR;
+			}
+			catch(Exception e){
+				ApplicationData.LogError(e);
+				return ErrorCode.UNSPECIFIED_ERROR;
+			}
+			return ErrorCode.NO_ERROR;
+		}
 		public static ErrorCode DrawMatrix(){
             try{
                 string matrixStr = "";
-                for(int i=0; i<GraphCalculations.NeighbourMatrix.GetLength(0); i++){
-                    for(int j=0; j<GraphCalculations.NeighbourMatrix.GetLength(1); j++){
-                        matrixStr += $"{GraphCalculations.NeighbourMatrix[i, j]}\t";
+                for(uint i=0; i<GraphCalculations.Vertices; i++){
+                    for(uint j=0; j<GraphCalculations.Vertices; j++){
+                        matrixStr += $"{GraphCalculations.Edge(i, j)}\t";
                     }
                     matrixStr += "\n";
                 }
@@ -125,7 +228,12 @@ namespace interspace{
 		
 		public static ErrorCode Help(){
 			Console.WriteLine("Commands:");
-			Console.WriteLine("create\tdraw\texit\thistory\tload\thelp");
+			string str = "Commands:\n";
+			for(int i=0; i<commandsCount; i++){
+				str += $"{commandsNamesList[i]}";
+				if(i<commandsCount-1) str += "\t";
+			}
+			Console.WriteLine(str);
 			return ErrorCode.NO_ERROR;
 		}
     }

@@ -43,13 +43,13 @@ namespace interspace{
 				ApplicationData.inputFile = new StreamReader(filename);
 				//process file
 				uint n = Convert.ToUInt32(ApplicationData.inputFile.ReadLine()); //get vertices' count
-				var matrix = new int[n,n];
+				var matrix = new double[n,n];
 				for(int i=0; i<n; i++){
 					string[] line = ApplicationData.inputFile.ReadLine().Split(' ');
 					if(line.Length > n) throw new FormatException();
 					// if the user had provided less than n numbers we assume the rest are zeros
 					for(int j=0; j<line.Length; j++){
-						matrix[i,j] = Convert.ToInt32(line[j]);
+						matrix[i,j] = Convert.ToDouble(line[j]);
 					}
 				}
 				GraphCalculations.NeighbourMatrix = matrix;
@@ -75,14 +75,14 @@ namespace interspace{
 			try{
 				Console.Write("Enter the number of vertices: ");
 				uint n = Convert.ToUInt32(Console.ReadLine());
-				var matrix = new int[n,n];	// make temporary matrix to save elements from input
+				var matrix = new double[n,n];	// make temporary matrix to save elements from input
 				for(int i=0; i<n; i++){
 					Console.Write($"Enter elements of row {i} separated by spaces: ");
 					string[] line = Console.ReadLine().Split(' ');
 					if (line.Length > n) throw new FormatException();
 					// if the user had provided less than n numbers we assume that the rest in the row is zero
 					for(int j=0; j<line.Length; j++){
-						matrix[i,j] = Convert.ToInt32(line[j]);
+						matrix[i,j] = Convert.ToDouble(line[j]);
 					}
 				}
 				// if there is still no error we can safely save all the data to our main matrix
@@ -105,14 +105,14 @@ namespace interspace{
 				Console.WriteLine("Enter edited column: ");
 				uint col = Convert.ToUInt32(Console.ReadLine());
 				if(col>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
-				int[] temp = new int[GraphCalculations.Vertices];
+				var temp = new double[GraphCalculations.Vertices];
 				Console.WriteLine("Enter new values: ");
 				string[] line = Console.ReadLine().Split(' ');
 				int n = line.Length;
 				if(n > GraphCalculations.Vertices) throw new FormatException();
 				//attention - this changes only n first elements
 				for(int i=0; i<n; i++){
-					temp[i] = Convert.ToInt32(line[i]);
+					temp[i] = Convert.ToDouble(line[i]);
 				}
 				for(int i=0; i<n; i++){
 					GraphCalculations.NeighbourMatrix[i, col] = temp[i];
@@ -143,7 +143,7 @@ namespace interspace{
 				Console.WriteLine("Enter edited column: ");
 				if(row>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
 				Console.WriteLine("Enter new value: ");
-				GraphCalculations.NeighbourMatrix[row, col] = Convert.ToInt32(Console.ReadLine());
+				GraphCalculations.NeighbourMatrix[row, col] = Convert.ToDouble(Console.ReadLine());
 			}
 			catch(Exception ex){
 				ApplicationData.LogError(ex);
@@ -166,14 +166,14 @@ namespace interspace{
 				Console.WriteLine("Enter edited row: ");
 				uint row = Convert.ToUInt32(Console.ReadLine());
 				if(row>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
-				int[] temp = new int[GraphCalculations.Vertices];
+				var temp = new double[GraphCalculations.Vertices];
 				Console.WriteLine("Enter new values: ");
 				string[] line = Console.ReadLine().Split(' ');
 				int n = line.Length;
 				if(n > GraphCalculations.Vertices) throw new FormatException();
 				//attention - this changes only n first elements
 				for(int j=0; j<n; j++){
-					temp[j] = Convert.ToInt32(line[j]);
+					temp[j] = Convert.ToDouble(line[j]);
 				}
 				for(int j=0; j<n; j++){
 					GraphCalculations.NeighbourMatrix[row, j] = temp[j];

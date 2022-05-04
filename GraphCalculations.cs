@@ -3,9 +3,9 @@ namespace interspace
 	public static class GraphCalculations
 	{
 		// the class for storing functions operating on graphs
-		public static int[,] NeighbourMatrix;
-		public static int[,] ShortestPathsMatrix;
-		public static string[] RowsToString(this int[,] matrix){
+		public static double[,] NeighbourMatrix;
+		public static double[,] ShortestPathsMatrix;
+		public static string[] RowsToString(this double[,] matrix){
 			int m = matrix.GetLength(0);
 			int n = matrix.GetLength(1);
 			string[] rows = new string[m];
@@ -26,15 +26,15 @@ namespace interspace
 			}
 			return false;
 		}
-		public static int Edge(uint vertex1, uint vertex2){
+		public static double Edge(uint vertex1, uint vertex2){
 			return NeighbourMatrix[vertex1, vertex2];
 		}
-		public static int[,] ExtendShortestPaths(int[,] D, int[,] W){
+		public static double[,] ExtendShortestPaths(double[,] D, double[,] W){
 			int n = D.GetLength(0);
-			var dPrim = new int[n,n];
+			var dPrim = new double[n,n];
 			for(int i=0; i<n; i++){
 				for(int j=0; j<n; j++){
-					dPrim[i,j] = int.MaxValue;
+					dPrim[i,j] = double.PositiveInfinity;
 					for(int k=0; k<n; k++){
 						// dPrim[i,j] = min(dPrim[i,j], d[i,k] + W[k,j])
 						dPrim[i,j] =
@@ -46,23 +46,23 @@ namespace interspace
 			}
 			return dPrim;
 		}
-		public static int[,] SlowAllPairsShortestPaths(){
+		public static double[,] SlowAllPairsShortestPaths(){
 			//it works for all but is Θ(n^4) ;-(
 			int n = NeighbourMatrix.GetLength(0);
-			var D = (int[,])NeighbourMatrix.Clone();
+			var D = (double[,])NeighbourMatrix.Clone();
 			for(int m = 1; m < n; m++){
 				D = ExtendShortestPaths(D, NeighbourMatrix);
 			}
 			return D;
 		}
 		//TODO find negative cycles
-		public static int[,] FastAllPairsShortestPaths(){
+		public static double[,] FastAllPairsShortestPaths(){
 			//attention - this works for matrices with non-negative cycles
 			//I think this one is Θ(n^3 log n) which is slightly better
 			int n = NeighbourMatrix.GetLength(0);
-			var D = (int[,])NeighbourMatrix.Clone();
-			int m = 0;
-			while (n-1 > m){
+			var D = (double[,])NeighbourMatrix.Clone();
+			int m = 1;
+			while (n > m){
 				D = ExtendShortestPaths(D, D);
 				m <<= 1;
 			}

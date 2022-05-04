@@ -37,7 +37,7 @@ namespace interspace
 			Console.Write(message);
 			Console.ResetColor();
 		}
-		public static void DrawMatrix(int[,] matrix){
+		public static void DrawMatrix(double[,] matrix){
 			string colsStr = "";
 			int m = matrix.GetLength(0);
 			int n = matrix.GetLength(1);

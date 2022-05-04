@@ -20,6 +20,8 @@ edits specified edge length
 edits first values in neighbour matrix column
 ### editrow
 edits first values in neighbour matrix row
+### export
+exports neighbour matrix and shortest paths matrix in comma-separated format
 ### help
 displays available commands
 ### history

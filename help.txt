@@ -3,6 +3,7 @@ draw     draws the neighbour matrix
 edit     edits specified edge length
 editcol  edits first values in neighbour matrix column
 editrow  edits first values in neighbour matrix row
+export   exports neighbour matrix and shortest paths matrix in comma-separated format
 help     displays available commands
 history  displays all commands input by user
 load     loads the neighbour matrix from the text file

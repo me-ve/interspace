@@ -13,6 +13,7 @@ namespace interspace{
 			{"edit",			EditMatrixEdge},
 			{"editcol",			EditMatrixCol},
 			{"editrow",			EditMatrixRow},
+			{"export",			ExportMatrices},
 			{"help",			Help},
 			{"history",			DisplayHistory},
 			{"load",			LoadMatrixFromFile},
@@ -227,6 +228,35 @@ namespace interspace{
 					default:
 						return ErrorCode.UNSPECIFIED_ERROR;
 				}
+			}
+			return ErrorCode.NO_ERROR;
+		}
+		public static ErrorCode ExportMatrices(){
+			try{
+				Console.WriteLine("Enter the name of export file: ");
+				string name = Console.ReadLine();
+				var exportFile = new StreamWriter(name);
+				uint n = GraphCalculations.Vertices;
+				exportFile.WriteLine("Neighbour Matrix:");
+				for(uint i=0; i<n; i++){
+					for(uint j=0; j<n; j++){
+						exportFile.Write($"{GraphCalculations.NeighbourMatrix[i,j]},");
+					}
+					exportFile.Write("\n");
+				}
+				GraphCalculations.CalculateShortestPaths();
+				exportFile.WriteLine("Shortest Paths Matrix:");
+				for(uint i=0; i<n; i++){
+					for(uint j=0; j<n; j++){
+						exportFile.Write($"{GraphCalculations.ShortestPathsMatrix[i,j]},");
+					}
+					exportFile.Write("\n");
+				}
+				exportFile.Close();
+			}
+			catch(Exception ex){
+				ApplicationData.LogError(ex);
+				return ErrorCode.UNSPECIFIED_ERROR;
 			}
 			return ErrorCode.NO_ERROR;
 		}

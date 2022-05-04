@@ -21,13 +21,13 @@ namespace interspace
 		public static bool hasNegativeEdges(){
 			for(uint i=0; i<Vertices; i++){
 				for(uint j=0; j<Vertices; j++){
-					if(Edge(i, j) < 0) return true;
+					if(NeighbourMatrix.Edge(i, j) < 0) return true;
 				}
 			}
 			return false;
 		}
-		public static double Edge(uint vertex1, uint vertex2){
-			return NeighbourMatrix[vertex1, vertex2];
+		public static double Edge(this double[,] matrix, uint vertex1, uint vertex2){
+			return matrix[vertex1, vertex2];
 		}
 		public static double[,] ExtendShortestPaths(double[,] D, double[,] W){
 			int n = D.GetLength(0);
@@ -46,21 +46,21 @@ namespace interspace
 			}
 			return dPrim;
 		}
-		public static double[,] SlowAllPairsShortestPaths(){
+		public static double[,] SlowAllPairsShortestPaths(double[,] W){
 			//it works for all but is Θ(n^4) ;-(
-			int n = NeighbourMatrix.GetLength(0);
-			var D = (double[,])NeighbourMatrix.Clone();
+			int n = W.GetLength(0);
+			var D = (double[,])W.Clone();
 			for(int m = 1; m < n; m++){
-				D = ExtendShortestPaths(D, NeighbourMatrix);
+				D = ExtendShortestPaths(D, W);
 			}
 			return D;
 		}
 		//TODO find negative cycles
-		public static double[,] FastAllPairsShortestPaths(){
+		public static double[,] FastAllPairsShortestPaths(double[,] W){
 			//attention - this works for matrices with non-negative cycles
 			//I think this one is Θ(n^3 log n) which is slightly better
-			int n = NeighbourMatrix.GetLength(0);
-			var D = (double[,])NeighbourMatrix.Clone();
+			int n = W.GetLength(0);
+			var D = (double[,])W.Clone();
 			int m = 1;
 			while (n > m){
 				D = ExtendShortestPaths(D, D);
@@ -69,11 +69,22 @@ namespace interspace
 			return D;
 		}
 		public static void CalculateShortestPaths(){
+			var EdgeWeightsMatrix = new double[Vertices, Vertices];
+			for(int i = 0; i<Vertices; i++){
+				for(int j = 0; j<Vertices; j++){
+					if(i != j && NeighbourMatrix[i, j] == 0){
+						EdgeWeightsMatrix[i, j] = double.PositiveInfinity;
+					}
+					else{
+						EdgeWeightsMatrix[i, j] = NeighbourMatrix[i, j];
+					}
+				}
+			}
 			if(hasNegativeEdges()){	//this will be changed to use slow method only for negative cycles
-				ShortestPathsMatrix = SlowAllPairsShortestPaths();
+				ShortestPathsMatrix = SlowAllPairsShortestPaths(EdgeWeightsMatrix);
 			}
 			else{
-				ShortestPathsMatrix = FastAllPairsShortestPaths();
+				ShortestPathsMatrix = FastAllPairsShortestPaths(EdgeWeightsMatrix);
 			}
 		}
 	}

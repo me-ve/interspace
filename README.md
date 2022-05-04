@@ -45,6 +45,6 @@ x x ... x
 where
 ```
 size - 32-bit unsigned integer that stores information about how many vertices are present
-x - 32-bit signed integer edge length between vertices
+x - edge length between vertices (in double float number)
 ```
 The user can skip zeros in the right part of matrix during inputting.

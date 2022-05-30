@@ -137,12 +137,15 @@ namespace interspace{
 		public static ErrorCode EditMatrixEdge(){
 			try{
 				if(GraphCalculations.NeighbourMatrix == null) throw new NullReferenceException();
+				
 				Console.WriteLine("Enter edited row: ");
 				uint row = Convert.ToUInt32(Console.ReadLine());
 				if(row>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
-				uint col = Convert.ToUInt32(Console.ReadLine());
+
 				Console.WriteLine("Enter edited column: ");
+				uint col = Convert.ToUInt32(Console.ReadLine());
 				if(row>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
+
 				Console.WriteLine("Enter new value: ");
 				GraphCalculations.NeighbourMatrix[row, col] = Convert.ToDouble(Console.ReadLine());
 			}

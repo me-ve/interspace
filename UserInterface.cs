@@ -18,7 +18,7 @@ namespace interspace
 			if(!Commands.commands.TryGetValue(commandParams[0], out command))
 				return ErrorCode.UNKNOWN_COMMAND_ERROR;
 			else
-				return command.Invoke();
+				return command.Invoke(args);
 		}
 		static string[] GetCommand(){
 			string lineBeginning = $"{ApplicationData.linesExecuted}> ";

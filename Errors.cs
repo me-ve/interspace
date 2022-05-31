@@ -5,6 +5,7 @@ namespace interspace{
 		public enum ErrorCode{
 			// this class contains codes of various events that could ruin user interaction with program
 			NO_ERROR,
+			ARGUMENT_ERROR,
 			FILE_GENERAL_ERROR,
 			FILE_LOADING_ERROR,
 			MATRIX_NULL_ERROR,
@@ -16,7 +17,8 @@ namespace interspace{
 		}
 		public static Dictionary<ErrorCode, string> errorCommunicates = new Dictionary<ErrorCode, string>(){
 			//sent to console during error
-			{ErrorCode.NO_ERROR, "OK"},
+			{ErrorCode.NO_ERROR,				"OK"},
+			{ErrorCode.ARGUMENT_ERROR,			"Wrong arguments"},
 			{ErrorCode.FILE_GENERAL_ERROR,		"There was a problem with loading file"},
 			{ErrorCode.FILE_LOADING_ERROR,		"The file does not exist"},
 			{ErrorCode.MATRIX_NULL_ERROR,		"The matrix is not initialized"},

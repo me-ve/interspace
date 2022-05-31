@@ -6,7 +6,7 @@ using ErrorCode = interspace.Errors.ErrorCode;
 namespace interspace{
     public static class Commands{
 		// all the commands are specified here
-		public delegate Errors.ErrorCode CommandDelegate();
+		public delegate Errors.ErrorCode CommandDelegate(String[] args);
 		public static Dictionary<string, CommandDelegate> commands = new Dictionary<string, CommandDelegate>(){
 			{"create",			CreateMatrixFromStdin},
 			{"draw",			DrawNeighbourMatrix},
@@ -23,11 +23,11 @@ namespace interspace{
 
 		public static int commandsCount = commands.Count;
 		public static List<string> commandsNamesList = new List<string>(commands.Keys);
-        public static ErrorCode CloseProgram(){
+        public static ErrorCode CloseProgram(String[] args){
 			ApplicationData.running = false;
 			return ErrorCode.NO_ERROR;
 		}
-        public static ErrorCode DisplayHistory(){
+        public static ErrorCode DisplayHistory(String[] args){
 			try{
 				Console.WriteLine(ApplicationData.history);
 			}
@@ -37,9 +37,32 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-		public static ErrorCode LoadMatrixFromFile(){
-			Console.Write("Type the name of matrix file: ");
-			string filename = Console.ReadLine();
+		public static ErrorCode LoadMatrixFromFile(String[] args){
+			bool filenameSet = false;
+			string filename = "";
+			int len = args.Length;
+			if(len > 0){
+				int i = 0;
+				while(i < len){
+					switch(args[i]){
+						case "-f":
+						case "--file":{
+							i++;
+							filename = args[i];
+							filenameSet = true;
+						}
+						break;
+						default:{
+							return ErrorCode.ARGUMENT_ERROR;
+						}
+					}
+					i++;
+				}
+			}
+			if(!filenameSet){
+				Console.Write("Type the name of matrix file: ");
+				filename = Console.ReadLine();
+			}
 			try{
 				ApplicationData.inputFile = new StreamReader(filename);
 				//process file
@@ -72,10 +95,44 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-		public static ErrorCode CreateMatrixFromStdin(){
+		public static ErrorCode CreateMatrixFromStdin(String[] args){
+			bool sizeSet = false;
+			uint n = 0;	// vertices
+			//process arguments
+			int len = args.Length;
+			if(len > 0){
+				int i = 0;				// set index to the beginning
+				while(i < len){
+					Console.WriteLine(args[i]);
+					switch(args[i]){	// process i-th argument
+						case "-h":{		// help dialog
+										// print help for this command
+						}
+						break;
+						case "-v":
+						case "--value":		// size of vertices
+							try{
+								i++;
+								n = Convert.ToUInt32(args[i]);
+								sizeSet = true;
+							}
+							catch(Exception ex){
+								ApplicationData.LogError(ex);
+								return ErrorCode.ARGUMENT_ERROR;
+							}
+						break;
+						default:{
+							return ErrorCode.ARGUMENT_ERROR;
+						}
+					}
+					i++;
+				}
+			}
 			try{
-				Console.Write("Enter the number of vertices: ");
-				uint n = Convert.ToUInt32(Console.ReadLine());
+				if(!sizeSet){
+					Console.Write("Enter the number of vertices: ");
+					n = Convert.ToUInt32(Console.ReadLine());
+				}
 				var matrix = new double[n,n];	// make temporary matrix to save elements from input
 				for(int i=0; i<n; i++){
 					Console.Write($"Enter elements of row {i} separated by spaces: ");
@@ -100,11 +157,35 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-		public static ErrorCode EditMatrixCol(){
+		// WARNING this will be deprecated for command edit -c 
+		public static ErrorCode EditMatrixCol(String[] args){
+			int len = args.Length;
+			uint col = 0;
+			bool columnSet = false;
+			if(len > 0){
+				int i = 0;
+				while(i < len){
+					switch(args[i]){
+						case "-r":
+						case "--row":{
+							i++;
+							col = Convert.ToUInt32(args[i]);
+							columnSet = true;
+						}
+						break;
+						default:{
+							return ErrorCode.ARGUMENT_ERROR;
+						}
+					}
+					i++;
+				}
+			}
 			try{
 				if(GraphCalculations.NeighbourMatrix == null) throw new NullReferenceException();
-				Console.WriteLine("Enter edited column: ");
-				uint col = Convert.ToUInt32(Console.ReadLine());
+				if(!columnSet){
+					Console.WriteLine("Enter edited column: ");
+					col = Convert.ToUInt32(Console.ReadLine());
+				}
 				if(col>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
 				var temp = new double[GraphCalculations.Vertices];
 				Console.WriteLine("Enter new values: ");
@@ -134,20 +215,63 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-		public static ErrorCode EditMatrixEdge(){
+		public static ErrorCode EditMatrixEdge(String[] args){
+			int len = args.Length;
+			bool columnSet = false;
+			bool rowSet = false;
+			bool valueSet = false;
+			uint row = 0;
+			uint col = 0;
+			double value = 0;
+			if(len > 0){
+				int i = 0;
+				while(i < len){
+					switch(args[i]){
+						case "-c":
+						case "--col":{	//column
+							i++;
+							col = Convert.ToUInt32(args[i]);
+							columnSet = true;
+						}
+						break;
+						case "-r":
+						case "--row":{	//row
+							i++;
+							row = Convert.ToUInt32(args[i]);
+							rowSet = true;
+						}
+						break;
+						case "-v":
+						case "--value":{	//value
+							i++;
+							value = Convert.ToDouble(args[i]);
+							valueSet = true;
+						}
+						break;
+						default:{
+							return ErrorCode.ARGUMENT_ERROR;
+						}
+					}
+					i++;
+				}
+			}
 			try{
 				if(GraphCalculations.NeighbourMatrix == null) throw new NullReferenceException();
-				
-				Console.WriteLine("Enter edited row: ");
-				uint row = Convert.ToUInt32(Console.ReadLine());
+				if(!rowSet){
+					Console.WriteLine("Enter edited row: ");
+					row = Convert.ToUInt32(Console.ReadLine());
+				}
 				if(row>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
-
-				Console.WriteLine("Enter edited column: ");
-				uint col = Convert.ToUInt32(Console.ReadLine());
+				if(!columnSet){
+					Console.WriteLine("Enter edited column: ");
+					col = Convert.ToUInt32(Console.ReadLine());
+				}
 				if(row>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
-
-				Console.WriteLine("Enter new value: ");
-				GraphCalculations.NeighbourMatrix[row, col] = Convert.ToDouble(Console.ReadLine());
+				if(!valueSet){
+					Console.WriteLine("Enter new value: ");
+					value = Convert.ToDouble(Console.ReadLine());
+				}
+				GraphCalculations.NeighbourMatrix[row, col] = value;
 			}
 			catch(Exception ex){
 				ApplicationData.LogError(ex);
@@ -164,11 +288,35 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-		public static ErrorCode EditMatrixRow(){
+		public static ErrorCode EditMatrixRow(String[] args){
+			int len = args.Length;
+			uint row = 0;
+			bool rowSet = false;
+			if(len > 0){
+				int i = 0;
+				while(i < len){
+					switch(args[i]){
+						case "-r":
+						case "--row":{
+							i++;
+							row = Convert.ToUInt32(args[i]);
+						}
+						break;
+						default:{
+							return ErrorCode.ARGUMENT_ERROR;
+						}
+					}
+					i++;
+				}
+			}
 			try{
 				if(GraphCalculations.NeighbourMatrix == null) throw new NullReferenceException();
-				Console.WriteLine("Enter edited row: ");
-				uint row = Convert.ToUInt32(Console.ReadLine());
+				
+				if(!rowSet){
+					Console.WriteLine("Enter edited row: ");
+					row = Convert.ToUInt32(Console.ReadLine());
+				}
+
 				if(row>=GraphCalculations.Vertices) throw new IndexOutOfRangeException();
 				var temp = new double[GraphCalculations.Vertices];
 				Console.WriteLine("Enter new values: ");
@@ -198,7 +346,11 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-		public static ErrorCode DrawNeighbourMatrix(){
+		public static ErrorCode DrawNeighbourMatrix(String[] args){
+			int len = args.Length;
+			if(len > 0){
+				return ErrorCode.ARGUMENT_ERROR;
+			}
             try{
                 UserInterface.DrawMatrix(GraphCalculations.NeighbourMatrix);
             }
@@ -215,7 +367,11 @@ namespace interspace{
 			}
             return ErrorCode.NO_ERROR;
         }
-		public static ErrorCode DrawShortestPathsMatrix(){
+		public static ErrorCode DrawShortestPathsMatrix(String[] args){
+			int len = args.Length;
+			if(len > 0){
+				return ErrorCode.ARGUMENT_ERROR;
+			}
 			try{
 				//TODO if the matrix is not changed it shouldn't be calculated again
 				GraphCalculations.CalculateShortestPaths();
@@ -234,10 +390,39 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-		public static ErrorCode ExportMatrices(){
+		public static ErrorCode ExportMatrices(String[] args){
+			bool fileSet = false;
+			string name = "";
+			int len = args.Length;
+			if(len > 0){
+				int i = 0;
+				while(i < len){
+					switch(args[i]){
+						case "-o":
+						case "--out":{
+							try{
+								i++;
+								name = args[i];
+								fileSet = true;
+							}
+							catch(Exception ex){
+								ApplicationData.LogError(ex);
+								return ErrorCode.ARGUMENT_ERROR;
+							}
+						}
+						break;
+						default:{
+							return ErrorCode.ARGUMENT_ERROR;
+						}
+					}
+					i++;
+				}
+			}
 			try{
-				Console.WriteLine("Enter the name of export file: ");
-				string name = Console.ReadLine();
+				if(!fileSet){
+					Console.WriteLine("Enter the name of export file: ");
+					name = Console.ReadLine();
+				}
 				var exportFile = new StreamWriter(name);
 				uint n = GraphCalculations.Vertices;
 				exportFile.WriteLine("Neighbour Matrix:");
@@ -263,7 +448,12 @@ namespace interspace{
 			}
 			return ErrorCode.NO_ERROR;
 		}
-		public static ErrorCode Help(){
+		public static ErrorCode Help(String[] args){
+			int len = args.Length;
+			if(len > 0){
+				//TODO display help for specified command
+				return ErrorCode.ARGUMENT_ERROR;
+			}
 			try{
 				Console.WriteLine(UserInterface.HelpDialog);
 			}

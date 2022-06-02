@@ -13,7 +13,6 @@ namespace interspace
 		public static string HelpDialog = File.ReadAllText("help.txt");
 		static ErrorCode DoAction(string[] commandParams){
 			string[] args = commandParams.Where((item, index) => index != 0).ToArray();	//get other arguments
-			//TODO process those arguments too
 			CommandDelegate command;
 			if(!Commands.commands.TryGetValue(commandParams[0], out command))
 				return ErrorCode.UNKNOWN_COMMAND_ERROR;

@@ -9,6 +9,7 @@ namespace interspace{
 		public delegate Errors.ErrorCode CommandDelegate(String[] args);
 		public static Dictionary<string, CommandDelegate> commands = new Dictionary<string, CommandDelegate>(){
 			{"create",			CreateMatrixFromStdin},
+			{"distance",		PrintDistance},
 			{"draw",			DrawNeighbourMatrix},
 			{"edit",			EditMatrixEdge},
 			{"editcol",			EditMatrixCol},
@@ -83,6 +84,8 @@ namespace interspace{
 				GraphCalculations.NeighbourMatrix = matrix;
 				//close the file after processing
 				ApplicationData.inputFile.Close();
+				// update shortest paths
+				GraphCalculations.CalculateShortestPaths();
 			}
 			catch (Exception ex){
 				ApplicationData.LogError(ex);
@@ -149,6 +152,8 @@ namespace interspace{
 				}
 				// if there is still no error we can safely save all the data to our main matrix
 				GraphCalculations.NeighbourMatrix = matrix;
+				// update shortest paths
+				GraphCalculations.CalculateShortestPaths();
 			}
 			catch(Exception ex){
 				ApplicationData.LogError(ex);
@@ -203,6 +208,8 @@ namespace interspace{
 				for(int i=0; i<n; i++){
 					GraphCalculations.NeighbourMatrix[i, col] = temp[i];
 				}
+				// update shortest paths
+				GraphCalculations.CalculateShortestPaths();
 			}
 			catch(Exception ex){
 				ApplicationData.LogError(ex);
@@ -276,6 +283,8 @@ namespace interspace{
 					value = Convert.ToDouble(Console.ReadLine());
 				}
 				GraphCalculations.NeighbourMatrix[row, col] = value;
+				// update shortest paths
+				GraphCalculations.CalculateShortestPaths();
 			}
 			catch(Exception ex){
 				ApplicationData.LogError(ex);
@@ -334,6 +343,8 @@ namespace interspace{
 				for(int j=0; j<n; j++){
 					GraphCalculations.NeighbourMatrix[row, j] = temp[j];
 				}
+				// update shortest paths
+				GraphCalculations.CalculateShortestPaths();
 			}
 			catch(Exception ex){
 				ApplicationData.LogError(ex);
@@ -371,14 +382,71 @@ namespace interspace{
 			}
             return ErrorCode.NO_ERROR;
         }
+		public static ErrorCode PrintDistance(String[] args){
+			int len = args.Length;
+			bool startSet = false;
+			bool endSet = false;
+			uint start = 0;
+			uint end = 0;
+			if(len > 0){
+				int i = 0;
+				while(i < len){
+					try{
+						switch(args[i]){
+							case "-f":
+							case "--from":{
+								i++;
+								start = Convert.ToUInt32(args[i]);
+								startSet = true;
+							}
+							break;
+							case "-t":
+							case "--to":{
+								i++;
+								end = Convert.ToUInt32(args[i]);
+								endSet = true;
+							}
+							break;
+						}
+					}
+					catch{
+						return ErrorCode.ARGUMENT_ERROR;
+					}
+					i++;
+				}
+			}
+			try{
+				if(!startSet){
+					Console.WriteLine("Enter start vertex: ");
+					start = Convert.ToUInt32(Console.ReadLine());
+				}
+				if(!endSet){
+					Console.WriteLine("Enter end vertex: ");
+					end = Convert.ToUInt32(Console.ReadLine());
+				}
+				double value = GraphCalculations.Edge(GraphCalculations.ShortestPathsMatrix, start, end);
+				Console.WriteLine($"Distance between vertex {start} and {end} is {value}");
+			}
+			catch(Exception ex){
+				ApplicationData.LogError(ex);
+				switch(ex){
+					case NullReferenceException:
+						return ErrorCode.MATRIX_NULL_ERROR;
+					case IndexOutOfRangeException:
+						return ErrorCode.MATRIX_INDEX_ERROR;
+					default:
+						return ErrorCode.UNSPECIFIED_ERROR;
+				}
+			}
+			return ErrorCode.NO_ERROR;
+		}
+		// REMOVE DEPRECATED
 		public static ErrorCode DrawShortestPathsMatrix(String[] args){
 			int len = args.Length;
 			if(len > 0){
 				return ErrorCode.ARGUMENT_ERROR;
 			}
 			try{
-				//TODO if the matrix is not changed it shouldn't be calculated again
-				GraphCalculations.CalculateShortestPaths();
 				UserInterface.DrawMatrix(GraphCalculations.ShortestPathsMatrix);
 			}
 			catch(Exception ex){

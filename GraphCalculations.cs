@@ -47,7 +47,7 @@ namespace interspace
 			return dPrim;
 		}
 		public static double[,] SlowAllPairsShortestPaths(double[,] W){
-			//it works for all but is Θ(n^4) ;-(
+			//it works for all but is Θ(n^4)
 			int n = W.GetLength(0);
 			var D = (double[,])W.Clone();
 			for(int m = 1; m < n; m++){
@@ -80,7 +80,7 @@ namespace interspace
 					}
 				}
 			}
-			if(hasNegativeEdges()){	//this will be changed to use slow method only for negative cycles
+			if(hasNegativeEdges()){	// FIXME this will be changed to use slow method only for negative cycles
 				ShortestPathsMatrix = SlowAllPairsShortestPaths(EdgeWeightsMatrix);
 			}
 			else{

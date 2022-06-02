@@ -29,7 +29,11 @@ namespace interspace{
 		}
         public static ErrorCode DisplayHistory(String[] args){
 			try{
-				Console.WriteLine(ApplicationData.history);
+				int i=0;
+				foreach(string command in ApplicationData.history){
+					Console.WriteLine($"{i}\t{command}");
+					i++;
+				}
 			}
 			catch (Exception ex){
 				ApplicationData.LogError(ex);

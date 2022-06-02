@@ -24,7 +24,7 @@ namespace interspace
 			string lineBeginning = $"{ApplicationData.linesExecuted}> ";
 			Console.Write(lineBeginning);
 			string command = Console.ReadLine();
-			ApplicationData.history += $"{ApplicationData.linesExecuted}\t{command}\n";
+			ApplicationData.history.Add($"{command}");
 			return command.Split();
 		}
 		public static void WriteColorLine(string message, ConsoleColor color){

@@ -12,34 +12,34 @@ To launch the program requires the .NET Core version 5.0.
 
 ### create
 creates the neighbour matrix through the standard input
-`-v/--vertices` - specify how many vertices will be set
+- `-v/--vertices` - specify how many vertices will be set
 ### distance
 print distance between two specified vertices
-`-f/--from` - vertex from which the distance will be printed
-`-t/--to` - vertex to which the distance will be printed
+- `-f/--from` - vertex from which the distance will be printed
+- `-t/--to` - vertex to which the distance will be printed
 ### draw
 draws the neighbour matrix
 ### edit
 edits specified edge length
-`-r/--row` - vertex from which the edge is set
-`-c/--col` - vertex to which the edge is set
-`-v/--value` - new value of specified edge
+- `-r/--row` - vertex from which the edge is set
+- `-c/--col` - vertex to which the edge is set
+- `-v/--value` - new value of specified edge
 ### editcol
 edits first values in neighbour matrix column
-`-c/--col` - the column that will be edited
+- `-c/--col` - the column that will be edited
 ### editrow
 edits first values in neighbour matrix row
-`-r/--row` - the row that will be edited
+- `-r/--row` - the row that will be edited
 ### export
 exports neighbour matrix and shortest paths matrix in comma-separated format
-`-o/--out` - the file where those matrices will be saved
+- `-o/--out` - the file where those matrices will be saved
 ### help
 displays available commands
 ### history
 displays all commands input by user
 ### load
 loads the neighbour matrix from the text file
-`-f/--file` - file from which the matrix will be loaded
+- `-f/--file` - file from which the matrix will be loaded
 ### shortest
 returns matrix of shortest paths for every pair of vertices
 ### exit

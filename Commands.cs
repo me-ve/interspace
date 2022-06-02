@@ -175,8 +175,8 @@ namespace interspace{
 				int i = 0;
 				while(i < len){
 					switch(args[i]){
-						case "-r":
-						case "--row":{
+						case "-c":
+						case "--col":{
 							i++;
 							col = Convert.ToUInt32(args[i]);
 							columnSet = true;
@@ -313,6 +313,7 @@ namespace interspace{
 						case "--row":{
 							i++;
 							row = Convert.ToUInt32(args[i]);
+							rowSet = true;
 						}
 						break;
 						default:{

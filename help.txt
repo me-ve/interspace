@@ -1,4 +1,5 @@
 create   creates the neighbour matrix through the standard input
+distance print distance between two specified vertices
 draw     draws the neighbour matrix
 edit     edits specified edge length
 editcol  edits first values in neighbour matrix column
